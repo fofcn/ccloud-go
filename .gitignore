@@ -13,3 +13,19 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# log files
+*.log
+
+# config files
+config/cluster/
+config/pipeline/
+
+#db files
+*.db
+
+# html files
+*.html
+
+# .bak files
+*.bak
