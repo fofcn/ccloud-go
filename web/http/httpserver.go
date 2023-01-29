@@ -2,9 +2,9 @@ package http
 
 import (
 	"ccloud/web/http/handler"
+	"ccloud/web/log"
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -34,15 +34,20 @@ func NewHttpServer() HttpServer {
 }
 
 func (server *httpserver) Config(config HttpServerConfig) {
+	log.Logger.Info("start config log")
 	server.config.IP = config.IP
 	server.config.Port = config.Port
+	log.Logger.Info("config log completed")
 }
 
 func (server *httpserver) Init() {
+	log.Logger.Info("start initliazing log")
 	server.mux = http.NewServeMux()
+	log.Logger.Info("initliazing log completed")
 }
 
 func (server *httpserver) Start() {
+	log.Logger.Info("start http server")
 	addr := server.buildAddr()
 
 	srv := &http.Server{
@@ -54,20 +59,22 @@ func (server *httpserver) Start() {
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
 		<-done
-
+		log.Logger.Info("shutdown http server")
 		if err := srv.Shutdown(context.Background()); err != nil {
-			log.Fatal("Shutdown server:", err)
+			log.Logger.Fatal("Shutdown server:", err)
 		}
+		log.Logger.Info("shutdown http server completed")
 	}()
 
 	err := srv.ListenAndServe()
 	if err != nil {
 		if err == http.ErrServerClosed {
-			log.Print("Server closed under request")
+			log.Logger.Info("Server closed under request")
 		} else {
-			log.Fatal("Server closed unexpected")
+			log.Logger.Info("Server closed unexpected")
 		}
 	}
+	log.Logger.Info("start http server completed")
 }
 
 func (server *httpserver) RegisterHandler(handler handler.HttpHandler) {
