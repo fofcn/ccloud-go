@@ -24,7 +24,7 @@ func starthttpserver() {
 	log.Logger.Info("Start http server.")
 	httpconfig := http.HttpServerConfig{
 		IP:   "localhost",
-		Port: 8080,
+		Port: 80,
 	}
 
 	httpserver := http.NewHttpServer()
