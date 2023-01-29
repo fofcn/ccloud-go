@@ -1,6 +1,7 @@
 package store
 
 import (
+	"ccloud/web/config"
 	"database/sql"
 	"io/ioutil"
 	"sync"
@@ -20,7 +21,7 @@ type sqlitestore struct {
 	db *sql.DB
 }
 
-var storedb *sqlitestore = nil
+var storedb *sqlitestore
 
 var mutex sync.Mutex
 
@@ -30,9 +31,8 @@ func NewSingleSqliteStore(dir string, initsql string) (SqlStore, error) {
 		mutex.Unlock()
 		return storedb, nil
 	}
-	dbfile := dir + "/ccloud.db"
 
-	db, err := sql.Open("sqlite3", dbfile)
+	db, err := sql.Open("sqlite3", config.GetInstance().DataSourceConfig.Config.DbPath)
 	if err != nil {
 		mutex.Unlock()
 		return nil, err
