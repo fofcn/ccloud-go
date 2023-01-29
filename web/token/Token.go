@@ -3,6 +3,7 @@ package token
 import (
 	"errors"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -17,10 +18,16 @@ type memauthtokenservice struct {
 	tokenstore TokenStore
 }
 
+var tokenservice *memauthtokenservice
+var once sync.Once
+
 func NewAuthTokenService() AuthTokenService {
-	return &memauthtokenservice{
-		tokenstore: NewMemTokenStore(),
-	}
+	once.Do(func() {
+		tokenservice = &memauthtokenservice{
+			tokenstore: NewMemTokenStore(),
+		}
+	})
+	return tokenservice
 }
 
 func (mem memauthtokenservice) CreateToken(payload TokenPayload) string {

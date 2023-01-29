@@ -56,6 +56,8 @@ func (upload *uploadfilehandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 		MediaType:  r.FormValue("mediaType"),
 	}
 	defer file.Close()
+	userId := r.Header.Get("x-user-id")
+	cmd.UserId = userId
 	response := upload.uploadservice.Upload(&cmd)
 	util.WriteJson(w, response)
 }

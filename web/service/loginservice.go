@@ -10,6 +10,7 @@ import (
 	"ccloud/web/security"
 	"ccloud/web/token"
 	"errors"
+	"strconv"
 	"time"
 )
 
@@ -52,7 +53,7 @@ func (impl loginserviceimpl) Login(cmd *cmd.LoginCmd) entity.Response {
 	// 密码校验
 	matches := impl.passwordencoder.Matches(cmd.User, user.Password)
 	if matches {
-		token, err := impl.createtoken(cmd.User)
+		token, err := impl.createtoken(user.Id)
 		if err != nil {
 			return entity.Fail(constant.TokenGenerateFailed)
 		}
@@ -69,9 +70,9 @@ func (impl loginserviceimpl) Login(cmd *cmd.LoginCmd) entity.Response {
 	return entity.Fail(constant.PasswordMismatch)
 }
 
-func (impl loginserviceimpl) createtoken(user string) (string, error) {
+func (impl loginserviceimpl) createtoken(userId int64) (string, error) {
 	var payload map[string]string = map[string]string{}
-	payload["user"] = user
+	payload["userId"] = strconv.FormatInt(userId, 10)
 	// 颁发Token
 	tokenpalyload := token.TokenPayload{
 		Expire:  time.Now().Add(7 * 24 * time.Hour),

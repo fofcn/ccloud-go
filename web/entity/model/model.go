@@ -11,6 +11,7 @@ type UserModel struct {
 
 type MediaModel struct {
 	Id             int64
+	UserId         int64
 	FileName       string
 	StorePath      string
 	FileCreateTime time.Time

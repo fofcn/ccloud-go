@@ -50,5 +50,8 @@ func registerhandler(httpserver http.HttpServer) {
 	if err != nil {
 		panic(err)
 	}
-	httpserver.RegisterHandler(upload)
+	wrapUpload := handler.BaseHandler{
+		Handle: upload,
+	}
+	httpserver.RegisterHandler(wrapUpload)
 }

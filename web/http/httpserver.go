@@ -2,6 +2,7 @@ package http
 
 import (
 	"ccloud/web/http/handler"
+	"ccloud/web/http/interceptor"
 	"ccloud/web/log"
 	"context"
 	"fmt"
@@ -27,10 +28,13 @@ type HttpServer interface {
 type httpserver struct {
 	mux    *http.ServeMux
 	config HttpServerConfig
+	chain  interceptor.InterceptorChain
 }
 
 func NewHttpServer() HttpServer {
-	return &httpserver{}
+	return &httpserver{
+		chain: interceptor.GetInstance(),
+	}
 }
 
 func (server *httpserver) Config(config HttpServerConfig) {
@@ -43,6 +47,9 @@ func (server *httpserver) Config(config HttpServerConfig) {
 func (server *httpserver) Init() {
 	log.Logger.Info("start initliazing log")
 	server.mux = http.NewServeMux()
+
+	server.chain.RegisterInterceptor(interceptor.NewAuthInterceptor("/file/**"))
+
 	log.Logger.Info("initliazing log completed")
 }
 

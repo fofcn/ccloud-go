@@ -7,7 +7,7 @@ import (
 )
 
 type MediaFileDao interface {
-	SaveFile(model.MediaModel) error
+	SaveFile(model.MediaModel) (int64, error)
 }
 
 type MediaFileDaoImpl struct {
@@ -24,16 +24,16 @@ func NewMediaFileDao() (MediaFileDao, error) {
 	}, nil
 }
 
-func (impl MediaFileDaoImpl) SaveFile(media model.MediaModel) error {
-	sql := "insert into `media_file` (file_name, store_path, file_create_time, media_type, create_time) values (?,?,?,?,?)"
-	affected, err := impl.store.Insert(sql, media.FileName, media.StorePath, media.FileCreateTime, media.MediaType, media.CreateTime)
+func (impl MediaFileDaoImpl) SaveFile(media model.MediaModel) (int64, error) {
+	sql := "insert into `media_file` (user_id, file_name, store_path, file_create_time, media_type, create_time) values (?, ?,?,?,?,?)"
+	rowId, err := impl.store.Insert(sql, media.UserId, media.FileName, media.StorePath, media.FileCreateTime, media.MediaType, media.CreateTime)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	if affected != 1 {
-		return errors.New("insert data failed")
+	if rowId < 1 {
+		return 0, errors.New("insert data failed")
 	}
 
-	return nil
+	return rowId, nil
 }

@@ -12,4 +12,5 @@ type UploadCmd struct {
 	FileHeader *multipart.FileHeader
 	CreateTime string
 	MediaType  string
+	UserId     string
 }

@@ -9,6 +9,7 @@ import (
 	"ccloud/web/log"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -81,16 +82,25 @@ func (impl uploadfileserviceimpl) Upload(cmd *cmd.UploadCmd) entity.Response {
 
 	// 记录到数据库
 	// todo 一致性问题处理：需要处理存储到fs成功，但是插入到数据库失败场景
+	userId, err := strconv.ParseInt(cmd.UserId, 10, 64)
+	if err != nil {
+		log.Logger.Error("Parse user id to int64 error, ", err)
+		return entity.Fail(constant.NumberFormatError)
+	}
+
 	model := model.MediaModel{
+		Id:             0,
+		UserId:         userId,
 		FileName:       cmd.FileHeader.Filename,
 		StorePath:      absPath,
 		FileCreateTime: createTime,
 		MediaType:      mediaType,
 		CreateTime:     time.Now(),
 	}
-	err = impl.dao.SaveFile(model)
+
+	_, err = impl.dao.SaveFile(model)
 	if err != nil {
-		log.Logger.Error("Save file to db error, %v", err)
+		log.Logger.Error("Save file to db error, ", err)
 		return entity.Fail(constant.DBInsertError)
 	}
 

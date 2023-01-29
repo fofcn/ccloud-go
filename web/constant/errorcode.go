@@ -21,6 +21,9 @@ var (
 	FileReadError            = NewErrorCode("000005", "read file error")
 	TimeFormatError          = NewErrorCode("000006", "time format error")
 	DBInsertError            = NewErrorCode("000006", "Save file error")
+	NumberFormatError        = NewErrorCode("000007", "string to number error")
+
+	InterceptorFailed = NewErrorCode("000008", "preRequest error")
 
 	PasswordMismatch    = NewErrorCode("010000", "Please type the correct username or password")
 	TokenGenerateFailed = NewErrorCode("010001", "Please type the correct username or password")
