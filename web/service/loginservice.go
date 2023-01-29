@@ -53,7 +53,7 @@ func (impl loginserviceimpl) Login(cmd *cmd.LoginCmd) entity.Response {
 	}
 
 	// 密码校验
-	matches := impl.passwordencoder.Matches(cmd.User, user.Password)
+	matches := impl.passwordencoder.Matches(cmd.Pass, user.Password)
 	if matches {
 		token, err := impl.createtoken(user.Id)
 		if err != nil {
@@ -73,14 +73,18 @@ func (impl loginserviceimpl) Login(cmd *cmd.LoginCmd) entity.Response {
 }
 
 func (impl loginserviceimpl) AddUser(username string, password string) error {
-	passwordEncoder := security.NewBcryptPasswordEncoder()
-
-	userModel := model.UserModel{
-		Username:   username,
-		Password:   passwordEncoder.Encode(password),
-		CreateTime: time.Now(),
+	// 检查用户是否存在
+	_, err := impl.accountdao.SelectByUsername(username)
+	if err != nil {
+		passwordEncoder := security.NewBcryptPasswordEncoder()
+		userModel := model.UserModel{
+			Username:   username,
+			Password:   passwordEncoder.Encode(password),
+			CreateTime: time.Now(),
+		}
+		_, err = impl.accountdao.InsertUser(userModel)
 	}
-	_, err := impl.accountdao.InsertUser(userModel)
+
 	return err
 }
 
