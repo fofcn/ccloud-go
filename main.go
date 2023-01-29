@@ -5,11 +5,13 @@ import (
 	"ccloud/web/http"
 	"ccloud/web/http/handler"
 	"ccloud/web/log"
+	"ccloud/web/service"
 )
 
 func main() {
 	initConfig()
 	initlog()
+	initUser()
 	starthttpserver()
 }
 
@@ -23,6 +25,16 @@ func initConfig() {
 func initlog() {
 	log.InitLogger()
 	defer log.Logger.Sync()
+}
+
+func initUser() {
+	loginService, _ := service.NewLoginService()
+	username := config.GetInstance().AccountConfig.Username
+	password := config.GetInstance().AccountConfig.Password
+	err := loginService.AddUser(username, password)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func starthttpserver() {

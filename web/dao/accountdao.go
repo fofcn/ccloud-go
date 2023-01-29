@@ -9,6 +9,7 @@ import (
 
 type AccountDao interface {
 	SelectByUsername(string) (model.UserModel, error)
+	InsertUser(userModel model.UserModel) (int64, error)
 }
 
 type accountdaoimpl struct {
@@ -45,4 +46,9 @@ func (impl accountdaoimpl) SelectByUsername(username string) (model.UserModel, e
 		Password:   record["password"].(string),
 		CreateTime: record["create_time"].(time.Time),
 	}, nil
+}
+
+func (impl accountdaoimpl) InsertUser(userModel model.UserModel) (int64, error) {
+	sql := "insert into userinfo (username, password,create_time)values(?,?,?)"
+	return impl.store.Insert(sql, userModel.Username, userModel.Password, userModel.CreateTime)
 }

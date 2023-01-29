@@ -38,11 +38,17 @@ type SqliteConfig struct {
 	DbPath string `yaml:"dbPath"`
 }
 
+type AccountConfig struct {
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+}
+
 type ConfigLoader struct {
 	ServerConfig     ServerConfig
 	LoggingConfig    LoggingConfig
 	StoreConfig      StoreConfig
 	DataSourceConfig DataSourceConfig
+	AccountConfig    AccountConfig
 }
 
 var configLoader *ConfigLoader
@@ -90,6 +96,11 @@ func (loader *ConfigLoader) LoadConfig() error {
 		return err
 	}
 
+	err = loader.loadAccountConfig(config)
+	if err != nil {
+		return err
+	}
+
 	return err
 }
 
@@ -107,4 +118,8 @@ func (loader *ConfigLoader) loadStoreConfig(config map[string]interface{}) error
 
 func (loader *ConfigLoader) loadDataSourceConfig(config map[string]interface{}) error {
 	return mapstructure.Decode(config["datasource"], &loader.DataSourceConfig)
+}
+
+func (loader *ConfigLoader) loadAccountConfig(config map[string]interface{}) error {
+	return mapstructure.Decode(config["account"], &loader.AccountConfig)
 }

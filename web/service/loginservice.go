@@ -6,6 +6,7 @@ import (
 	"ccloud/web/entity"
 	"ccloud/web/entity/cmd"
 	"ccloud/web/entity/dto"
+	"ccloud/web/entity/model"
 	"ccloud/web/log"
 	"ccloud/web/security"
 	"ccloud/web/token"
@@ -16,6 +17,7 @@ import (
 
 type LoginService interface {
 	Login(cmd *cmd.LoginCmd) entity.Response
+	AddUser(username string, password string) error
 }
 
 type loginserviceimpl struct {
@@ -68,6 +70,18 @@ func (impl loginserviceimpl) Login(cmd *cmd.LoginCmd) entity.Response {
 	}
 
 	return entity.Fail(constant.PasswordMismatch)
+}
+
+func (impl loginserviceimpl) AddUser(username string, password string) error {
+	passwordEncoder := security.NewBcryptPasswordEncoder()
+
+	userModel := model.UserModel{
+		Username:   username,
+		Password:   passwordEncoder.Encode(password),
+		CreateTime: time.Now(),
+	}
+	_, err := impl.accountdao.InsertUser(userModel)
+	return err
 }
 
 func (impl loginserviceimpl) createtoken(userId int64) (string, error) {

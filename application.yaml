@@ -23,5 +23,8 @@ datasource:
   config:
     dbPath: /app/db/ccloud.db
 
+account:
+  username: demo
+  password: 12345678A
   
   
