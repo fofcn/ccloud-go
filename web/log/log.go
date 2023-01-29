@@ -1,6 +1,7 @@
 package log
 
 import (
+	"ccloud/web/config"
 	"os"
 
 	"go.uber.org/zap"
@@ -32,12 +33,12 @@ func getEncoder() zapcore.Encoder {
 
 func getLogWriter() zapcore.WriteSyncer {
 	lumberJackLogger := &lumberjack.Logger{
-		Filename:   "./ccloud.log",
-		MaxSize:    10,
-		MaxAge:     30,
-		MaxBackups: 5,
-		LocalTime:  true,
-		Compress:   false,
+		Filename:   config.GetInstance().LoggingConfig.File,
+		MaxSize:    config.GetInstance().LoggingConfig.MaxSize,
+		MaxAge:     config.GetInstance().LoggingConfig.MaxAge,
+		MaxBackups: config.GetInstance().LoggingConfig.MaxBackups,
+		LocalTime:  config.GetInstance().LoggingConfig.LocalTime,
+		Compress:   config.GetInstance().LoggingConfig.Compress,
 	}
 	return zapcore.AddSync(lumberJackLogger)
 }

@@ -1,6 +1,7 @@
 package store
 
 import (
+	"ccloud/web/config"
 	"database/sql"
 	"fmt"
 	"log"
@@ -16,7 +17,7 @@ type sqllitestore struct {
 }
 
 func CreateAndPrint() {
-	db, err := sql.Open("sqlite3", "./test.db")
+	db, err := sql.Open(config.GetInstance().DataSourceConfig.DriverName, config.GetInstance().DataSourceConfig.Config.DbPath)
 	if err != nil {
 		log.Fatal(err)
 		return

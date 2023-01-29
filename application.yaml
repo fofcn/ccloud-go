@@ -1,0 +1,27 @@
+application:
+  name: CCloud
+
+server:
+  host: localhost
+  port: 80
+
+logging:
+  level: DEBUG
+  file: /app/log/ccloud.log
+  maxSize: 10
+  maxAge: 30
+  maxBackups: 5
+  localTime: true
+  compress: false
+
+store:
+  image: /app/images/
+  video: /app/videos/
+
+datasource:
+  driverName: sqlite3
+  config:
+    dbPath: /app/db/ccloud.db
+
+  
+  

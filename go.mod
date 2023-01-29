@@ -13,9 +13,11 @@ require (
 )
 
 require (
+	github.com/goinggo/mapstructure v0.0.0-20140717182941-194205d9b4a9
 	github.com/google/uuid v1.3.0
 	github.com/mattn/go-sqlite3 v1.14.16
 	go.uber.org/zap v1.24.0
 	golang.org/x/crypto v0.4.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
+	gopkg.in/yaml.v3 v3.0.1
 )

@@ -1,18 +1,23 @@
 package main
 
 import (
+	"ccloud/web/config"
 	"ccloud/web/http"
 	"ccloud/web/http/handler"
 	"ccloud/web/log"
-	"ccloud/web/security"
-	"fmt"
 )
 
 func main() {
-	passwordencoder := security.NewBcryptPasswordEncoder()
-	fmt.Println(passwordencoder.Encode("123456"))
+	initConfig()
 	initlog()
 	starthttpserver()
+}
+
+func initConfig() {
+	err := config.GetInstance().LoadConfig()
+	if err != nil {
+		panic(err)
+	}
 }
 
 func initlog() {
@@ -23,8 +28,8 @@ func initlog() {
 func starthttpserver() {
 	log.Logger.Info("Start http server.")
 	httpconfig := http.HttpServerConfig{
-		IP:   "localhost",
-		Port: 80,
+		IP:   config.GetInstance().ServerConfig.Host,
+		Port: config.GetInstance().ServerConfig.Port,
 	}
 
 	httpserver := http.NewHttpServer()

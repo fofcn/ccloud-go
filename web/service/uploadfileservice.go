@@ -1,6 +1,7 @@
 package service
 
 import (
+	"ccloud/web/config"
 	"ccloud/web/constant"
 	"ccloud/web/dao"
 	"ccloud/web/entity"
@@ -49,12 +50,12 @@ func (impl uploadfileserviceimpl) Upload(cmd *cmd.UploadCmd) entity.Response {
 	newFileName := strings.Join([]string{uuid.String(), suffix}, "")
 
 	// 补充目录
-	absPath := "/app/images/" + newFileName
+	absPath := config.GetInstance().StoreConfig.ImagePath + newFileName
 
 	// 存储到本地文件系统
-	_, err := os.Stat("/app/images/")
+	_, err := os.Stat(config.GetInstance().StoreConfig.ImagePath)
 	if err != nil {
-		os.Mkdir("/app/images/", 0755)
+		os.Mkdir(config.GetInstance().StoreConfig.ImagePath, 0755)
 	}
 	f, err := os.Create(absPath)
 	defer f.Close()
