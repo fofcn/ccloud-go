@@ -71,4 +71,14 @@ func registerhandler(httpserver http.HttpServer) {
 		Handle: upload,
 	}
 	httpserver.RegisterHandler(wrapUpload)
+
+	// 注册文件列表
+	listFile, err := handler.NewListFileHandler()
+	if err != nil {
+		panic(err)
+	}
+	wrapListFile := handler.BaseHandler{
+		Handle: listFile,
+	}
+	httpserver.RegisterHandler(wrapListFile)
 }
