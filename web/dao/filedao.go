@@ -11,7 +11,7 @@ import (
 
 type MediaFileDao interface {
 	SaveFile(model.MediaModel) (int64, error)
-	GetFileByPage(userId int64, orderBy string, pageRequest cmd.PageRequest) ([]model.MediaModel, error)
+	GetFileByPage(userId int64, mediaType int, orderBy string, pageRequest cmd.PageRequest) ([]model.MediaModel, error)
 }
 
 type MediaFileDaoImpl struct {
@@ -42,11 +42,11 @@ func (impl MediaFileDaoImpl) SaveFile(media model.MediaModel) (int64, error) {
 	return rowId, nil
 }
 
-func (impl MediaFileDaoImpl) GetFileByPage(userId int64, orderBy string, pageRequest cmd.PageRequest) ([]model.MediaModel, error) {
+func (impl MediaFileDaoImpl) GetFileByPage(userId int64, mediaType int, orderBy string, pageRequest cmd.PageRequest) ([]model.MediaModel, error) {
 	// 计算Page
 	offset := (pageRequest.PageNo - 1) * pageRequest.PageSize
-	sql := "select * from `media_file` where user_id=? order by ? limit ?,? "
-	fileList, err := impl.store.Query(sql, userId, orderBy, offset, pageRequest.PageSize)
+	sql := "select * from `media_file` where user_id=? and media_type=? order by ? limit ?,? "
+	fileList, err := impl.store.Query(sql, userId, mediaType, orderBy, offset, pageRequest.PageSize)
 	if err != nil {
 		return nil, err
 	}

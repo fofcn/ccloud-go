@@ -36,7 +36,7 @@ func NewListFileService() (ListFileService, error) {
 }
 
 func (service listfileservice) List(cmd *cmd.ListFileCmd) entity.Response {
-	fileList, err := service.mediafiledao.GetFileByPage(cmd.UserId, "id desc", cmd.PageRequest)
+	fileList, err := service.mediafiledao.GetFileByPage(cmd.UserId, cmd.MediaType, "id desc", cmd.PageRequest)
 	if err != nil {
 		log.Logger.Errorf("query file list error using user id: %v", cmd.UserId, err)
 		return entity.Fail(constant.ListUserFileError)

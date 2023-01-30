@@ -23,5 +23,6 @@ type UploadCmd struct {
 type ListFileCmd struct {
 	PageRequest PageRequest
 	UserId      int64
+	MediaType   int
 	OrderBy     string
 }
