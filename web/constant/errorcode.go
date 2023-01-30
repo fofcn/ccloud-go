@@ -29,4 +29,5 @@ var (
 	TokenGenerateFailed = NewErrorCode("010001", "Please type the correct username or password")
 	StoreFileFailed     = NewErrorCode("010002", "Store file to local file system failed")
 	UsernameNotFound    = NewErrorCode("010003", "Please type the correct username or password")
+	ListUserFileError   = NewErrorCode("010004", "Query file list failed")
 )

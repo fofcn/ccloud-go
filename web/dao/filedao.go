@@ -1,13 +1,17 @@
 package dao
 
 import (
+	"ccloud/web/entity/cmd"
 	"ccloud/web/entity/model"
 	"ccloud/web/store"
 	"errors"
+
+	"github.com/goinggo/mapstructure"
 )
 
 type MediaFileDao interface {
 	SaveFile(model.MediaModel) (int64, error)
+	GetFileByPage(userId int64, orderBy string, pageRequest cmd.PageRequest) ([]model.MediaModel, error)
 }
 
 type MediaFileDaoImpl struct {
@@ -36,4 +40,23 @@ func (impl MediaFileDaoImpl) SaveFile(media model.MediaModel) (int64, error) {
 	}
 
 	return rowId, nil
+}
+
+func (impl MediaFileDaoImpl) GetFileByPage(userId int64, orderBy string, pageRequest cmd.PageRequest) ([]model.MediaModel, error) {
+	// 计算Page
+	offset := (pageRequest.PageNo - 1) * pageRequest.PageSize
+	sql := "select * from `media_file` where user_id=? order by ? limit ?,? "
+	fileList, err := impl.store.Query(sql, userId, orderBy, offset, pageRequest.PageSize)
+	if err != nil {
+		return nil, err
+	}
+
+	var result []model.MediaModel = make([]model.MediaModel, 0)
+	for _, file := range fileList {
+		var mediaFile model.MediaModel
+		mapstructure.Decode(file, &mediaFile)
+		result = append(result, mediaFile)
+	}
+
+	return result, nil
 }
