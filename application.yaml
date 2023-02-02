@@ -2,7 +2,7 @@ application:
   name: CCloud
 
 server:
-  host: localhost
+  host: 
   port: 80
 
 logging:

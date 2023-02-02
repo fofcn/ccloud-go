@@ -48,7 +48,7 @@ func (server *httpserver) Init() {
 	log.Logger.Info("start initliazing log")
 	server.mux = http.NewServeMux()
 
-	server.chain.RegisterInterceptor(interceptor.NewAuthInterceptor("/file/**"))
+	server.chain.RegisterInterceptor(interceptor.NewAuthInterceptor("/file/**", "/account/token/**"))
 
 	log.Logger.Info("initliazing log completed")
 }

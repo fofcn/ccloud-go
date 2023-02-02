@@ -28,10 +28,13 @@ func initlog() {
 }
 
 func initUser() {
-	loginService, _ := service.NewLoginService()
+	loginService, err := service.NewLoginService()
+	if err != nil {
+		panic(err)
+	}
 	username := config.GetInstance().AccountConfig.Username
 	password := config.GetInstance().AccountConfig.Password
-	err := loginService.AddUser(username, password)
+	err = loginService.AddUser(username, password)
 	if err != nil {
 		panic(err)
 	}
@@ -71,4 +74,14 @@ func registerhandler(httpserver http.HttpServer) {
 		Handle: upload,
 	}
 	httpserver.RegisterHandler(wrapUpload)
+
+	// 注册token验证
+	validToken, err := handler.NewViliadTokenHandler()
+	if err != nil {
+		panic(err)
+	}
+	wrapValidToken := handler.BaseHandler{
+		Handle: validToken,
+	}
+	httpserver.RegisterHandler(wrapValidToken)
 }

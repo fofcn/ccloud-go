@@ -46,7 +46,7 @@ func (login *loginhandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Logger.Error(err)
 		resp := entity.Fail(constant.RequestReadErr)
-		util.WriteJson(w, resp.ToString())
+		util.WriteJson(w, resp)
 		return
 	}
 
@@ -55,10 +55,10 @@ func (login *loginhandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Logger.Error(err)
 		resp := entity.Fail(constant.JsonStringToInterfaceErr)
-		util.WriteJson(w, resp.ToString())
+		util.WriteJson(w, resp)
 		return
 	}
 
 	resp := login.loginservice.Login(&cmd)
-	util.WriteJson(w, resp.ToString())
+	util.WriteJson(w, resp)
 }

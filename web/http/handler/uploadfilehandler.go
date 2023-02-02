@@ -44,7 +44,7 @@ func (upload *uploadfilehandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 	if err != nil {
 		log.Logger.Error(err)
 		resp := entity.Fail(constant.FileReadError)
-		util.WriteJson(w, resp.ToString())
+		util.WriteJson(w, resp)
 		return
 	}
 
