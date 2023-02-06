@@ -55,7 +55,7 @@ func (impl loginserviceimpl) Login(cmd *cmd.LoginCmd) entity.Response {
 	// 密码校验
 	matches := impl.passwordencoder.Matches(cmd.Pass, user.Password)
 	if matches {
-		token, err := impl.createtoken(user.Id)
+		token, err := impl.createtoken(cmd.User, user.Id)
 		if err != nil {
 			return entity.Fail(constant.TokenGenerateFailed)
 		}
@@ -88,7 +88,7 @@ func (impl loginserviceimpl) AddUser(username string, password string) error {
 	return err
 }
 
-func (impl loginserviceimpl) createtoken(userId int64) (string, error) {
+func (impl loginserviceimpl) createtoken(username string, userId int64) (string, error) {
 	var payload map[string]string = map[string]string{}
 	payload["userId"] = strconv.FormatInt(userId, 10)
 	// 颁发Token
@@ -96,7 +96,7 @@ func (impl loginserviceimpl) createtoken(userId int64) (string, error) {
 		Expire:  time.Now().Add(7 * 24 * time.Hour),
 		Payload: payload,
 	}
-	token := impl.tokenservice.CreateToken(tokenpalyload)
+	token := impl.tokenservice.CreateToken(username, tokenpalyload)
 	if token != "" {
 		return token, nil
 	}

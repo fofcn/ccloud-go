@@ -10,12 +10,13 @@ import (
 )
 
 type AuthTokenService interface {
-	CreateToken(TokenPayload) string
+	CreateToken(userId string, payload TokenPayload) string
 	GetToken(string) (*TokenPayload, error)
 }
 
 type memauthtokenservice struct {
-	tokenstore TokenStore
+	tokenstore   TokenStore
+	userTokenRef map[string]string
 }
 
 var tokenservice *memauthtokenservice
@@ -24,16 +25,18 @@ var once sync.Once
 func NewAuthTokenService() AuthTokenService {
 	once.Do(func() {
 		tokenservice = &memauthtokenservice{
-			tokenstore: NewMemTokenStore(),
+			tokenstore:   NewMemTokenStore(),
+			userTokenRef: make(map[string]string),
 		}
 	})
 	return tokenservice
 }
 
-func (mem memauthtokenservice) CreateToken(payload TokenPayload) string {
+func (mem memauthtokenservice) CreateToken(userId string, payload TokenPayload) string {
 	uuid := uuid.New()
 	token := uuid.String()
 	mem.tokenstore.StoreToken(token, payload)
+	mem.userTokenRef[userId] = token
 	return token
 }
 
