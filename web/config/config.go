@@ -35,7 +35,8 @@ type DataSourceConfig struct {
 }
 
 type SqliteConfig struct {
-	DbPath string `yaml:"dbPath"`
+	DbPath     string `yaml:"dbPath"`
+	InitSqlDir string `yaml:"initSqlDir"`
 }
 
 type AccountConfig struct {

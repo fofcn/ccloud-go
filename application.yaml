@@ -21,6 +21,7 @@ store:
 datasource:
   driverName: sqlite3
   config:
+    initSqlDir: /app/db/
     dbPath: /app/db/ccloud.db
 
 account:

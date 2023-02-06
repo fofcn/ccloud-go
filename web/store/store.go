@@ -55,7 +55,7 @@ func NewSingleSqliteStore(dir string, initsql string) (SqlStore, error) {
 		}
 
 		if len(resultset) == 0 {
-			sqlbytes, err := ioutil.ReadFile(initsql)
+			sqlbytes, err := ioutil.ReadFile(config.GetInstance().DataSourceConfig.Config.InitSqlDir + table + ".sql")
 			if err != nil {
 				mutex.Unlock()
 				return nil, err
