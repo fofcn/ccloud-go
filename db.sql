@@ -12,5 +12,6 @@ create table if not exists `media_file`(
     `store_path` varchar(128) not null,
     `file_create_time` datetime not null,
     `media_type` tinyint not null,
-    `create_time` datetime not null
+    `create_time` datetime not null,
+    `user_id` integer not null
 );
