@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"sync"
@@ -100,7 +101,7 @@ func (loader *ConfigLoader) LoadConfig() error {
 	if err != nil {
 		return err
 	}
-
+	fmt.Println("")
 	return err
 }
 
